@@ -29,7 +29,8 @@ class TestSendableNotifications: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
-    
+
+// -------- For setting notificatins ---------------
     func test_NotificationsGetSet() {
         // given
         let userNotificationCenter = UNUserNotificationCenter.current()
@@ -45,5 +46,52 @@ class TestSendableNotifications: XCTestCase {
         
         //then
         XCTAssertEqual(arrayOfNotificationDates.count, numberOfSNs)
+    }
+
+    
+// ------- For reading upcoming notificatinos -----------
+    
+    func test_returnsAll_Notifications() {
+        // given
+        let userNotificationCenter = UNUserNotificationCenter.current()
+        userNotificationCenter.removeAllPendingNotificationRequests()
+        let numberOfSNs = Int.random(in: 1...9)
+        let arrayOfSendableNotifications = randomArrayOfSendableNotifications(numberOfNotifications: numberOfSNs)
+        setNotificationsWithDates(notifications: arrayOfSendableNotifications)
+        var arrayOfDates: [Date] = []
+        
+        //when
+        arrayOfDates = numberOfPendingNotifications()
+        
+        //then
+        XCTAssertEqual(numberOfSNs, arrayOfDates.count)
+    }
+    
+    func test_getPNRs_isAsync() {
+        // given
+        let userNotificationCenter = UNUserNotificationCenter.current()
+        userNotificationCenter.removeAllPendingNotificationRequests()
+        let numberOfSNs = Int.random(in: 1...9)
+        let arrayOfSendableNotifications = randomArrayOfSendableNotifications(numberOfNotifications: numberOfSNs)
+        setNotificationsWithDates(notifications: arrayOfSendableNotifications)
+        var arrayOfDates: [Date] = []
+                
+        // when
+        userNotificationCenter.getPendingNotificationRequests { requests in
+                arrayOfDates = []
+                for request in requests {
+                    let realTrigger = request.trigger as? UNCalendarNotificationTrigger
+                    arrayOfDates.append((realTrigger?.nextTriggerDate())!)
+                }
+        }
+        
+        // then
+        XCTAssertNotEqual(numberOfSNs, arrayOfDates.count)
+    }
+
+// ----- test if removingAllPendingNotifications doesn't erase notifications
+    // - set after it was called but before it finishes
+    func test_removingAllPNs_wontErase_futureNotifications() {
+        
     }
 }

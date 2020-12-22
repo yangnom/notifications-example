@@ -68,7 +68,7 @@ func numberOfPendingNotifications() -> [Date] {
     return arrayOfDates
 }
 
-// NOTE: All my randoms
+//------------- Randoms for testing -------------------
 func randomDate() -> Date {
     let randomSeconds = Double.random(in: 0...90000)
     let date = Date().addingTimeInterval(randomSeconds)
