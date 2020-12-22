@@ -43,7 +43,7 @@ func setNotificationsWithDates(notifications: [SendableNotification])  {
     
 }
 
-func updatePendingNotificationsView() -> [Date] {
+func numberOfPendingNotifications() -> [Date] {
     
     let currentUNuserNotificationCenter = UNUserNotificationCenter.current()
     var arrayOfDates: [Date] = []

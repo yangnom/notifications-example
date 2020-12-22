@@ -46,7 +46,7 @@ struct ContentView: View {
                                })
                         Button("Make a notification") {
                             defer {
-                                upcomingNotifications = Array(updatePendingNotificationsView().sorted(by: { $0.compare($1) == .orderedAscending }).prefix(3))
+                                upcomingNotifications = Array(numberOfPendingNotifications().sorted(by: { $0.compare($1) == .orderedAscending }).prefix(3))
                             }
                             let notificationDate = SendableNotification(time: selectedDate, title: "Notification!", subtitle: "just a note!")
                             setNotificationsWithDates(notifications: [notificationDate])
@@ -62,7 +62,7 @@ struct ContentView: View {
                         self.upcomingNotifications = []
                     }
                     Button("updatePendingView") {
-                        upcomingNotifications = Array(updatePendingNotificationsView().sorted(by: { $0.compare($1) == .orderedAscending }).prefix(3))
+                        upcomingNotifications = Array(numberOfPendingNotifications().sorted(by: { $0.compare($1) == .orderedAscending }).prefix(3))
                     }
                 }
                 .navigationTitle("Notification Testing")
