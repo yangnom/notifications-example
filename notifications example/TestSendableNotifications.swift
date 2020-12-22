@@ -89,9 +89,22 @@ class TestSendableNotifications: XCTestCase {
         XCTAssertNotEqual(numberOfSNs, arrayOfDates.count)
     }
 
-// ----- test if removingAllPendingNotifications doesn't erase notifications
-    // - set after it was called but before it finishes
+// ---- test removing notifications ---------
     func test_removingAllPNs_wontErase_futureNotifications() {
+        // given
+        let userNotificationCenter = UNUserNotificationCenter.current()
+        userNotificationCenter.removeAllPendingNotificationRequests()
+        let numberOfSNs = Int.random(in: 1...9)
+        let arrayOfSendableNotifications = randomArrayOfSendableNotifications(numberOfNotifications: numberOfSNs)
+        setNotificationsWithDates(notifications: arrayOfSendableNotifications)
+        var arrayOfDates: [Date] = []
         
+        // when
+        userNotificationCenter.removeAllPendingNotificationRequests()
+        setNotificationsWithDates(notifications: randomArrayOfSendableNotifications(numberOfNotifications: 1))
+        arrayOfDates = numberOfPendingNotifications()
+        
+        // then
+        XCTAssertEqual(arrayOfDates.count, 1)
     }
 }
