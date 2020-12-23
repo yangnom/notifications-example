@@ -66,7 +66,9 @@ class TestSendableNotifications: XCTestCase {
         //then
         XCTAssertEqual(numberOfSNs, arrayOfDates.count)
     }
-    
+
+// the fact that getting pending notification requests is indeed async
+// and runs in a non-serially way shows that my method does create serialness
     func test_getPNRs_isAsync() {
         // given
         let userNotificationCenter = UNUserNotificationCenter.current()
