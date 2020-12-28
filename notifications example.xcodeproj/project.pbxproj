@@ -18,6 +18,7 @@
 		873E757125929BAD007804ED /* TestingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873E757025929BAD007804ED /* TestingView.swift */; };
 		873E757625929BD4007804ED /* SendableNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873E757525929BD4007804ED /* SendableNotification.swift */; };
 		873E757B2592A4C4007804ED /* TestSendableNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873E757A2592A4C4007804ED /* TestSendableNotifications.swift */; };
+		87D0925D2599515400FE4E2C /* TestTestingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D0925C2599515400FE4E2C /* TestTestingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		873E757025929BAD007804ED /* TestingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingView.swift; sourceTree = "<group>"; };
 		873E757525929BD4007804ED /* SendableNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendableNotification.swift; sourceTree = "<group>"; };
 		873E757A2592A4C4007804ED /* TestSendableNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestSendableNotifications.swift; path = "notifications example/TestSendableNotifications.swift"; sourceTree = SOURCE_ROOT; };
+		87D0925C2599515400FE4E2C /* TestTestingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTestingView.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +131,7 @@
 		873E755325929B58007804ED /* notifications exampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				87D0925C2599515400FE4E2C /* TestTestingView.swift */,
 				873E757A2592A4C4007804ED /* TestSendableNotifications.swift */,
 				873E755425929B58007804ED /* notifications_exampleTests.swift */,
 				873E755625929B58007804ED /* Info.plist */,
@@ -289,6 +292,7 @@
 			files = (
 				873E757B2592A4C4007804ED /* TestSendableNotifications.swift in Sources */,
 				873E755525929B58007804ED /* notifications_exampleTests.swift in Sources */,
+				87D0925D2599515400FE4E2C /* TestTestingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

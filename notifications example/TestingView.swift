@@ -18,7 +18,7 @@ struct TestingView: View {
         }
     }
 }
-    
+
 
 func defineCustomActions() {
     // Define the custom actions.
@@ -38,26 +38,20 @@ func defineCustomActions() {
     // Register the notification type.
     let notificationCenter = UNUserNotificationCenter.current()
     notificationCenter.setNotificationCategories([meetingInviteCategory])
+}
+
+func printCategories() {
+    let notificationCenter = UNUserNotificationCenter.current()
     notificationCenter.getNotificationCategories{ setOfCategories in
         for category in setOfCategories {
             print(category)
+            print("The category actions are: \(category.actions.description)")
+            print("Category summary format: \(category.categorySummaryFormat.description)")
         }
+        print("There are \(setOfCategories.count) categories")
     }
 }
 
-    func printCategories() {
-        let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.getNotificationCategories{ setOfCategories in
-            for category in setOfCategories {
-                print(category)
-            }
-            print("There are \(setOfCategories.count) categories")
-        }
-    }
-    
-func anArrayMadeByAFunction() -> [String] {
-    return ["This", "was", "made", "from", "a", "function"]
-}
 
 struct TestingView_Previews: PreviewProvider {
     static var previews: some View {
