@@ -16,9 +16,41 @@ struct TestingView: View {
         Button("Print Categories") {
             printCategories()
         }
+        Button("Set an actionable notification") {
+            setActionableNotificationWithDateIn20Seconds()
+        }
     }
 }
 
+func setActionableNotificationWithDateIn20Seconds()  {
+        
+    let dateOfNotification = Date().addingTimeInterval(20)
+    let dateComponents = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: dateOfNotification)
+//    let meetingID = "Atomic Energy Meeting"
+//    let userID = "Harry Anderson"
+        
+    // give the notification content
+    let content = UNMutableNotificationContent()
+    // make a unit test for this
+    content.title = "Actionable thingy"
+    content.body = "and a 'body'"
+    content.sound = UNNotificationSound.default
+//    content.userInfo = ["MEETING_ID" : meetingID,
+//                        "USER_ID" : userID ]
+    content.categoryIdentifier = "MEETING_INVITATION"
+    
+    
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) {error in
+            if let error = error {
+                fatalError("There is an error: \(error.localizedDescription)")
+            }
+        }
+        
+        print("Notification Date: \(String(describing: trigger.nextTriggerDate()?.description))")
+    
+}
 
 func defineCustomActions() {
     // Define the custom actions.
