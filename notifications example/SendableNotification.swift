@@ -25,6 +25,7 @@ struct SendableNotification {
     }
 }
 
+// MARK: Notification functions
 func setNotificationsWithDates(notifications: [SendableNotification])  {
     
     for notification in notifications {
@@ -68,7 +69,7 @@ func numberOfPendingNotifications() -> [Date] {
     return arrayOfDates
 }
 
-//------------- Randoms for testing -------------------
+// MARK: Randoms for testing
 func randomDate() -> Date {
     let randomSeconds = Double.random(in: 0...90000)
     let date = Date().addingTimeInterval(randomSeconds)
@@ -108,6 +109,7 @@ func arrayOfRandomDates() -> [Date] {
     return dateArray
 }
 
+// MARK: Extensions
 extension Date {
     func convertDateFormatter() -> String {
         let dateFormatter = DateFormatter()
