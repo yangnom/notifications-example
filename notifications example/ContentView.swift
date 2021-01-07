@@ -41,8 +41,7 @@ struct ContentView: View {
                                content: {
                                 Text("Picture").tag(0)
                                 Text("Actionable").tag(1)
-                                Text("Value 3").tag(2)
-                                Text("Value 4").tag(3)
+                                Text("Normal").tag(2)
                                })
                         Button("Make a notification") {
                             defer {
