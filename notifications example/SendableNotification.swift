@@ -12,12 +12,14 @@ struct SendableNotification {
     let dateComponents: DateComponents
     let content: UNMutableNotificationContent
     let actionable: Bool
+    let picture: Bool
     
-    init(time: Date, title: String, subtitle: String, actionable: Bool = false, sound: UNNotificationSound = UNNotificationSound.default) {
+    init(time: Date, title: String, subtitle: String, actionable: Bool = false, picture: Bool = false, sound: UNNotificationSound = UNNotificationSound.default) {
         
         dateComponents = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: time)
         
         self.actionable = actionable
+        self.picture = picture
         // give the notification content
         content = UNMutableNotificationContent()
         // make a unit test for this
@@ -34,6 +36,11 @@ func setNotificationsWithDates(notifications: [SendableNotification])  {
         
         if notification.actionable == true {
             notification.content.categoryIdentifier = "MEETING_INVITATION"
+        } else if notification.picture == true {
+            let fileURL: URL = Bundle.main.url(forResource: "test", withExtension: "jpg")! //  your disk file url, support image, audio, movie
+
+            let attachement = try? UNNotificationAttachment(identifier: "attachment", url: fileURL, options: nil)
+            notification.content.attachments = [attachement!]
         }
         
         // setup the trigger and request
@@ -73,6 +80,27 @@ func numberOfPendingNotifications() -> [Date] {
     sema.wait()
         
     return arrayOfDates
+}
+
+func defineCustomActions() {
+    // Define the custom actions.
+    let acceptAction = UNNotificationAction(identifier: "ACCEPT_ACTION",
+                                            title: "Accept",
+                                            options: UNNotificationActionOptions(rawValue: 0))
+    let declineAction = UNNotificationAction(identifier: "DECLINE_ACTION",
+                                             title: "Decline",
+                                             options: UNNotificationActionOptions(rawValue: 0))
+    // Define the notification type
+    let meetingInviteCategory =
+        UNNotificationCategory(identifier: "MEETING_INVITATION",
+                               actions: [acceptAction, declineAction],
+                               intentIdentifiers: [],
+                               hiddenPreviewsBodyPlaceholder: "",
+                               options: .customDismissAction)
+    // Register the notification type.
+    let notificationCenter = UNUserNotificationCenter.current()
+    notificationCenter.setNotificationCategories([meetingInviteCategory])
+
 }
 
 // MARK: Randoms for testing

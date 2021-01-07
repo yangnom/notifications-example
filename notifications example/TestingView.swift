@@ -17,49 +17,30 @@ struct TestingView: View {
             printCategories()
         }
         Button("Set a notification") {
-            setActionableNotificationWithDates(notifications: [SendableNotification(time: Date().addingTimeInterval(20), title: "static title", subtitle: "static subtitle")])
+//            setActionableNotificationWithDates(notifications: [SendableNotification(time: Date().addingTimeInterval(20), title: "static title", subtitle: "static subtitle")])
         }
     }
 }
 
-func setActionableNotificationWithDates(notifications: [SendableNotification])  {
-    
-    for notification in notifications {
+//func setActionableNotificationWithDates(notifications: [SendableNotification])  {
+//
+//    for notification in notifications {
+//
+//        notification.content.categoryIdentifier = "MEETING_INVITATION"
+//
+//
+//        let trigger = UNCalendarNotificationTrigger(dateMatching: notification.dateComponents, repeats: false)
+//        let request = UNNotificationRequest(identifier: UUID().uuidString, content: notification.content, trigger: trigger)
+//        UNUserNotificationCenter.current().add(request) {error in
+//            if let error = error {
+//                fatalError("There is an error: \(error.localizedDescription)")
+//            }
+//        }
+//
+//        print("Notification Date: \(String(describing: trigger.nextTriggerDate()?.description))")
+//    }
+//}
 
-        notification.content.categoryIdentifier = "MEETING_INVITATION"
-        
-        
-        let trigger = UNCalendarNotificationTrigger(dateMatching: notification.dateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: notification.content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request) {error in
-            if let error = error {
-                fatalError("There is an error: \(error.localizedDescription)")
-            }
-        }
-        
-        print("Notification Date: \(String(describing: trigger.nextTriggerDate()?.description))")
-    }
-}
-
-func defineCustomActions() {
-    // Define the custom actions.
-    let acceptAction = UNNotificationAction(identifier: "ACCEPT_ACTION",
-                                            title: "Accept",
-                                            options: UNNotificationActionOptions(rawValue: 0))
-    let declineAction = UNNotificationAction(identifier: "DECLINE_ACTION",
-                                             title: "Decline",
-                                             options: UNNotificationActionOptions(rawValue: 0))
-    // Define the notification type
-    let meetingInviteCategory =
-        UNNotificationCategory(identifier: "MEETING_INVITATION",
-                               actions: [acceptAction, declineAction],
-                               intentIdentifiers: [],
-                               hiddenPreviewsBodyPlaceholder: "",
-                               options: .customDismissAction)
-    // Register the notification type.
-    let notificationCenter = UNUserNotificationCenter.current()
-    notificationCenter.setNotificationCategories([meetingInviteCategory])
-}
 
 func printCategories() {
     let notificationCenter = UNUserNotificationCenter.current()

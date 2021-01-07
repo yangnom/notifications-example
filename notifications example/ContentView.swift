@@ -37,8 +37,8 @@ struct ContentView: View {
                             Spacer()
                         }
                         Picker(selection: $selection, label:
-                                Text("Picker Name")
-                               , content: {
+                                Text("Picker Name"),
+                               content: {
                                 Text("Picture").tag(0)
                                 Text("Actionable").tag(1)
                                 Text("Value 3").tag(2)
@@ -48,14 +48,17 @@ struct ContentView: View {
                             defer {
                                 upcomingNotifications = Array(numberOfPendingNotifications().sorted(by: { $0.compare($1) == .orderedAscending }).prefix(3))
                             }
-                            if selection == 1 {
+                            if selection == 0 {
+                                let notificationDate = SendableNotification(time: selectedDate, title: "Picture!", subtitle: "picture notification!", picture: true)
+                                setNotificationsWithDates(notifications: [notificationDate])
+                            } else if selection == 1 {
                                 let notificationDate = SendableNotification(time: selectedDate, title: "Actionable!", subtitle: "actionable notification!", actionable: true)
                                 setNotificationsWithDates(notifications: [notificationDate])
                             } else {
                                 let notificationDate = SendableNotification(time: selectedDate, title: "Normal notification!", subtitle: "regular boring!")
                                 setNotificationsWithDates(notifications: [notificationDate])
                             }
-                                print("Notification made")
+                            print("Notification made")
                         }
                     }
                     Button("Pull up the sheet") {
