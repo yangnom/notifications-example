@@ -11,11 +11,13 @@ import NotificationCenter
 struct SendableNotification {
     let dateComponents: DateComponents
     let content: UNMutableNotificationContent
+    let actionable: Bool
     
     init(time: Date, title: String, subtitle: String, actionable: Bool = false, sound: UNNotificationSound = UNNotificationSound.default) {
         
         dateComponents = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: time)
         
+        self.actionable = actionable
         // give the notification content
         content = UNMutableNotificationContent()
         // make a unit test for this
@@ -29,6 +31,10 @@ struct SendableNotification {
 func setNotificationsWithDates(notifications: [SendableNotification])  {
     
     for notification in notifications {
+        
+        if notification.actionable == true {
+            notification.content.categoryIdentifier = "MEETING_INVITATION"
+        }
         
         // setup the trigger and request
         let trigger = UNCalendarNotificationTrigger(dateMatching: notification.dateComponents, repeats: false)

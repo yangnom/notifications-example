@@ -50,12 +50,12 @@ struct ContentView: View {
                             }
                             if selection == 1 {
                                 let notificationDate = SendableNotification(time: selectedDate, title: "Actionable!", subtitle: "actionable notification!", actionable: true)
-                                setActionableNotificationWithDates(notifications: [notificationDate])
-                            } else {
-                                let notificationDate = SendableNotification(time: selectedDate, title: "Notification!", subtitle: "just a note!")
                                 setNotificationsWithDates(notifications: [notificationDate])
-                                print("Notification made")
+                            } else {
+                                let notificationDate = SendableNotification(time: selectedDate, title: "Normal notification!", subtitle: "regular boring!")
+                                setNotificationsWithDates(notifications: [notificationDate])
                             }
+                                print("Notification made")
                         }
                     }
                     Button("Pull up the sheet") {
