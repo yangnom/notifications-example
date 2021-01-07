@@ -12,7 +12,7 @@ struct SendableNotification {
     let dateComponents: DateComponents
     let content: UNMutableNotificationContent
     
-    init(time: Date, title: String, subtitle: String, sound: UNNotificationSound = UNNotificationSound.default) {
+    init(time: Date, title: String, subtitle: String, actionable: Bool = false, sound: UNNotificationSound = UNNotificationSound.default) {
         
         dateComponents = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: time)
         

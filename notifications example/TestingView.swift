@@ -16,40 +16,29 @@ struct TestingView: View {
         Button("Print Categories") {
             printCategories()
         }
-        Button("Set an actionable notification") {
-            setActionableNotificationWithDateIn20Seconds()
+        Button("Set a notification") {
+            setActionableNotificationWithDates(notifications: [SendableNotification(time: Date().addingTimeInterval(20), title: "static title", subtitle: "static subtitle")])
         }
     }
 }
 
-func setActionableNotificationWithDateIn20Seconds()  {
+func setActionableNotificationWithDates(notifications: [SendableNotification])  {
     
-    let dateOfNotification = Date().addingTimeInterval(20)
-    let dateComponents = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: dateOfNotification)
-    //    let meetingID = "Atomic Energy Meeting"
-    //    let userID = "Harry Anderson"
-    
-    // give the notification content
-    let content = UNMutableNotificationContent()
-    // make a unit test for this
-    content.title = "Actionable thingy"
-    content.body = "and a 'body'"
-    content.sound = UNNotificationSound.default
-    //    content.userInfo = ["MEETING_ID" : meetingID,
-    //                        "USER_ID" : userID ]
-    content.categoryIdentifier = "MEETING_INVITATION"
-    
-    
-    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-    UNUserNotificationCenter.current().add(request) {error in
-        if let error = error {
-            fatalError("There is an error: \(error.localizedDescription)")
+    for notification in notifications {
+
+        notification.content.categoryIdentifier = "MEETING_INVITATION"
+        
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: notification.dateComponents, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: notification.content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) {error in
+            if let error = error {
+                fatalError("There is an error: \(error.localizedDescription)")
+            }
         }
+        
+        print("Notification Date: \(String(describing: trigger.nextTriggerDate()?.description))")
     }
-    
-    print("Notification Date: \(String(describing: trigger.nextTriggerDate()?.description))")
-    
 }
 
 func defineCustomActions() {
