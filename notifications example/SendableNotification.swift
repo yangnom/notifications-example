@@ -7,6 +7,7 @@
 
 import Foundation
 import NotificationCenter
+import Combine
 
 struct SendableNotification {
     let dateComponents: DateComponents
@@ -38,7 +39,7 @@ func setNotificationsWithDates(notifications: [SendableNotification])  {
             notification.content.categoryIdentifier = "MEETING_INVITATION"
         } else if notification.picture == true {
             let fileURL: URL = Bundle.main.url(forResource: "test", withExtension: "jpg")! //  your disk file url, support image, audio, movie
-
+            
             let attachement = try? UNNotificationAttachment(identifier: "attachment", url: fileURL, options: nil)
             notification.content.attachments = [attachement!]
         }
@@ -64,23 +65,43 @@ func numberOfPendingNotifications() -> [Date] {
     let sema = DispatchSemaphore(value: 0)
     
     currentUNuserNotificationCenter.getPendingNotificationRequests { requests in
-            // if there are no notifications the for loop won't run, so let's update the view
-            if requests.count == 0 {
-                print("No notifications")
-                arrayOfDates = []
-            }
+        // if there are no notifications the for loop won't run, so let's update the view
+        if requests.count == 0 {
+            print("No notifications")
             arrayOfDates = []
-            for request in requests {
-                let realTrigger = request.trigger as? UNCalendarNotificationTrigger
-                arrayOfDates.append((realTrigger?.nextTriggerDate())!)
-                print("array of dates is \(arrayOfDates)")
-            }
-            sema.signal()
+        }
+        arrayOfDates = []
+        for request in requests {
+            let realTrigger = request.trigger as? UNCalendarNotificationTrigger
+            arrayOfDates.append((realTrigger?.nextTriggerDate())!)
+            print("array of dates is \(arrayOfDates)")
+        }
+        sema.signal()
     }
     sema.wait()
-        
+    
     return arrayOfDates
 }
+
+func futureUpcomingNotifications(notificationCenter: UNUserNotificationCenter = UNUserNotificationCenter.current()) -> Future<[UNNotificationRequest], Never> {
+    Future<[UNNotificationRequest], Never> { promise in
+        print("Original")
+        notificationCenter.getPendingNotificationRequests { requests in
+                promise(.success(requests))
+        }
+    }
+}
+
+func transFormToTrigger(notificationRequests: [UNNotificationRequest]) ->  [Date] {
+    var arrayOfDates: [Date] = []
+    for request in notificationRequests {
+        let realTrigger = request.trigger as? UNCalendarNotificationTrigger
+        arrayOfDates.append((realTrigger?.nextTriggerDate())!)
+    }
+//    return notificationRequest.trigger as! UNCalendarNotificationTrigger
+    return arrayOfDates
+}
+
 
 func defineCustomActions() {
     // Define the custom actions.
@@ -100,7 +121,7 @@ func defineCustomActions() {
     // Register the notification type.
     let notificationCenter = UNUserNotificationCenter.current()
     notificationCenter.setNotificationCategories([meetingInviteCategory])
-
+    
 }
 
 // MARK: Randoms for testing

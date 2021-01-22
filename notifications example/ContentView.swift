@@ -7,6 +7,7 @@
 
 import SwiftUI
 import NotificationCenter
+import Combine
 
 struct ContentView: View {
     
@@ -14,6 +15,7 @@ struct ContentView: View {
     @State var upcomingNotifications: [Date] = []
     @State var showingDetail = false
     @State var selection: Int = 2
+    @State var subscriptions = Set<AnyCancellable>()
     
     
     var body: some View {
@@ -45,7 +47,16 @@ struct ContentView: View {
                                })
                         Button("Make a notification") {
                             defer {
-                                upcomingNotifications = Array(numberOfPendingNotifications().sorted(by: { $0.compare($1) == .orderedAscending }).prefix(3))
+                                let future = futureUpcomingNotifications()
+                                
+                                future
+                                    .map { transFormToTrigger(notificationRequests: $0)}
+                                    .sink(receiveCompletion: {
+                                        print("Notification Update Complete", $0)
+                                    }, receiveValue: {
+                                        upcomingNotifications = $0
+                                    })
+                                    .store(in: &subscriptions)
                             }
                             if selection == 0 {
                                 let notificationDate = SendableNotification(time: selectedDate, title: "Picture!", subtitle: "picture notification!", picture: true)
@@ -69,8 +80,21 @@ struct ContentView: View {
                         self.upcomingNotifications = []
                     }
                     Button("updatePendingView") {
-                        upcomingNotifications = Array(numberOfPendingNotifications().sorted(by: { $0.compare($1) == .orderedAscending }).prefix(3))
-                    }
+                        let future = futureUpcomingNotifications()
+                        
+                        future
+                            .map() {
+                                transFormToTrigger(notificationRequests: $0)
+                            }
+                            .sink(receiveCompletion: {
+                                print("Completed with,", $0)
+                            },
+                            receiveValue: {
+                                print("Recieved \($0) as an array of Dates")
+                                upcomingNotifications = $0
+                            })
+                            .store(in: &subscriptions)
+                    }                    
                 }
                 .navigationTitle("Notification Testing")
             }

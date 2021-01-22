@@ -6,40 +6,62 @@
 //
 
 import SwiftUI
+import Combine
 
 struct TestingView: View {
     
     // have to test WHY a static array will update a view, but a an array from a function will NOT update the view
-    @State var anArray: [String] = ["First", "Second"]
+    @State var arrayOfDates: [Date] = [Date(), Date().addingTimeInterval(2000)]
+    @State var subscriptions = Set<AnyCancellable>()
+
     
     var body: some View {
-        Button("Print Categories") {
-            printCategories()
-        }
-        Button("Set a notification") {
-//            setActionableNotificationWithDates(notifications: [SendableNotification(time: Date().addingTimeInterval(20), title: "static title", subtitle: "static subtitle")])
+        VStack {
+            Form {
+                Button("Passes [UNNotificationRequest]") {
+                    let future = futureUpcomingNotifications()
+                    
+                    
+                    future
+                        .sink(receiveCompletion: {
+                            print("Completed with,", $0)
+                        },
+                        receiveValue: {
+                            print("Recieved \($0) as an array of notifications")
+                        })
+                        .store(in: &subscriptions)
+                }
+                
+                Button("Turn it into several NotificationRequests") {
+                    let future = futureUpcomingNotifications()
+                    
+                    
+                    future
+                        .map() {
+                            transFormToTrigger(notificationRequests: $0)
+                        }
+                        .sink(receiveCompletion: {
+                            print("Completed with,", $0)
+                        },
+                        receiveValue: {
+                            print("Recieved \($0) as an array of Dates")
+                        })
+                        .store(in: &subscriptions)
+                }
+                
+                Button("copyPasta") {
+                    
+                }
+                
+                Button("Straight example") {
+                    
+                }
+                
+            }
         }
     }
 }
 
-//func setActionableNotificationWithDates(notifications: [SendableNotification])  {
-//
-//    for notification in notifications {
-//
-//        notification.content.categoryIdentifier = "MEETING_INVITATION"
-//
-//
-//        let trigger = UNCalendarNotificationTrigger(dateMatching: notification.dateComponents, repeats: false)
-//        let request = UNNotificationRequest(identifier: UUID().uuidString, content: notification.content, trigger: trigger)
-//        UNUserNotificationCenter.current().add(request) {error in
-//            if let error = error {
-//                fatalError("There is an error: \(error.localizedDescription)")
-//            }
-//        }
-//
-//        print("Notification Date: \(String(describing: trigger.nextTriggerDate()?.description))")
-//    }
-//}
 
 
 func printCategories() {
