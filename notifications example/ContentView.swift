@@ -12,8 +12,7 @@ import Combine
 struct ContentView: View {
     
     @State var selectedDate: Date = Date()
-    @State var upcomingNotifications: [Date] = []
-    @State var showingDetail = false
+    @State var upcomingNotificationDates: [Date] = []
     @State var selection: Int = 2
     @State var subscriptions = Set<AnyCancellable>()
     
@@ -22,43 +21,60 @@ struct ContentView: View {
         VStack {
             NavigationView {
                 Form {
+                    
                     Section(header: Text("Upcoming notifications")) {
-                        ForEach(upcomingNotifications, id: \.self) { date in
+                        ForEach(upcomingNotificationDates, id: \.self) { date in
                             Text(date.convertDateFormatter())
                         }
                     }
-                    Button("Pull up the sheet") {
-                        self.showingDetail = true
-                    }
+                    
                     Button("Erase notifications") {
                         let userNotificationCenter = UNUserNotificationCenter.current()
                         userNotificationCenter.removeAllPendingNotificationRequests()
-                        self.upcomingNotifications = []
+                        self.upcomingNotificationDates = []
                     }
-                    Button("updatePendingView") {
-                        let future = futureUpcomingNotifications()
+                    
+                    Button("Set Random Notifications") {
+                        let arrayOfRandomNotifications = randomArrayOfSendableNotifications(numberOfNotifications: 5)
+                        setNotificationsWithDates(notifications: arrayOfRandomNotifications)
+                        
+                        let future = futureUpcomingNotificationRequests()
                         
                         future
                             .map() {
-                                transFormToTrigger(notificationRequests: $0)
+                                notificationRequestsToDates(notificationRequests: $0)
                             }
                             .sink(receiveCompletion: {
                                 print("Completed with,", $0)
                             },
                             receiveValue: {
                                 print("Recieved \($0) as an array of Dates")
-                                upcomingNotifications = $0
+                                upcomingNotificationDates = $0
+                            })
+                            .store(in: &subscriptions)
+                    }
+                    
+                    Button("updatePendingView") {
+                        let future = futureUpcomingNotificationRequests()
+                        
+                        future
+                            .map() {
+                                notificationRequestsToDates(notificationRequests: $0)
+                            }
+                            .sink(receiveCompletion: {
+                                print("Completed with,", $0)
+                            },
+                            receiveValue: {
+                                print("Recieved \($0) as an array of Dates")
+                                upcomingNotificationDates = $0
                             })
                             .store(in: &subscriptions)
                     }
                     NavigationLink(destination: EditNotificationView()) {
                         Text("Make Notification")
-                    }.navigationBarTitle(Text("Master"))
+                    }.navigationBarTitle(Text("Notifications"))
                 }
                 .navigationTitle("Notification Testing")
-            }
-            .sheet(isPresented: $showingDetail){
-                TestingView()
             }
         }
         .onAppear(perform: {
@@ -70,6 +86,21 @@ struct ContentView: View {
                 }
             }
             defineCustomActions()
+            
+            let future = futureUpcomingNotificationRequests()
+            
+            future
+                .map() {
+                    notificationRequestsToDates(notificationRequests: $0)
+                }
+                .sink(receiveCompletion: {
+                    print("Completed with,", $0)
+                },
+                receiveValue: {
+                    print("Recieved \($0) as an array of Dates")
+                    upcomingNotificationDates = $0
+                })
+                .store(in: &subscriptions)
         })
         
     }
@@ -78,6 +109,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(upcomingNotifications: [Date(), Date().addingTimeInterval(3000)])
+        ContentView(upcomingNotificationDates: [Date(), Date().addingTimeInterval(3000)])
     }
 }

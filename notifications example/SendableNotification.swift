@@ -83,7 +83,7 @@ func numberOfPendingNotifications() -> [Date] {
     return arrayOfDates
 }
 
-func futureUpcomingNotifications(notificationCenter: UNUserNotificationCenter = UNUserNotificationCenter.current()) -> Future<[UNNotificationRequest], Never> {
+func futureUpcomingNotificationRequests(notificationCenter: UNUserNotificationCenter = UNUserNotificationCenter.current()) -> Future<[UNNotificationRequest], Never> {
     Future<[UNNotificationRequest], Never> { promise in
         print("Original")
         notificationCenter.getPendingNotificationRequests { requests in
@@ -92,7 +92,7 @@ func futureUpcomingNotifications(notificationCenter: UNUserNotificationCenter = 
     }
 }
 
-func transFormToTrigger(notificationRequests: [UNNotificationRequest]) ->  [Date] {
+func notificationRequestsToDates(notificationRequests: [UNNotificationRequest]) ->  [Date] {
     var arrayOfDates: [Date] = []
     for request in notificationRequests {
         let realTrigger = request.trigger as? UNCalendarNotificationTrigger
@@ -101,6 +101,7 @@ func transFormToTrigger(notificationRequests: [UNNotificationRequest]) ->  [Date
 //    return notificationRequest.trigger as! UNCalendarNotificationTrigger
     return arrayOfDates
 }
+
 
 func notificationsDates() {
     

@@ -19,7 +19,7 @@ struct TestingView: View {
         VStack {
             Form {
                 Button("Passes [UNNotificationRequest]") {
-                    let future = futureUpcomingNotifications()
+                    let future = futureUpcomingNotificationRequests()
                     
                     
                     future
@@ -33,12 +33,12 @@ struct TestingView: View {
                 }
                 
                 Button("Turn it into several NotificationRequests") {
-                    let future = futureUpcomingNotifications()
+                    let future = futureUpcomingNotificationRequests()
                     
                     
                     future
                         .map() {
-                            transFormToTrigger(notificationRequests: $0)
+                            notificationRequestsToDates(notificationRequests: $0)
                         }
                         .sink(receiveCompletion: {
                             print("Completed with,", $0)
