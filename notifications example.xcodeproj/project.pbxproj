@@ -19,6 +19,7 @@
 		873E757625929BD4007804ED /* SendableNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873E757525929BD4007804ED /* SendableNotification.swift */; };
 		873E757B2592A4C4007804ED /* TestSendableNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873E757A2592A4C4007804ED /* TestSendableNotifications.swift */; };
 		87576E8C25A7B6E6003C61D3 /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 87576E8B25A7B6E6003C61D3 /* test.jpg */; };
+		87748F8B25BCBB0A007179FA /* EditNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87748F8A25BCBB0A007179FA /* EditNotificationView.swift */; };
 		87D0925D2599515400FE4E2C /* TestTestingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D0925C2599515400FE4E2C /* TestTestingView.swift */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +59,7 @@
 		873E757525929BD4007804ED /* SendableNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendableNotification.swift; sourceTree = "<group>"; };
 		873E757A2592A4C4007804ED /* TestSendableNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestSendableNotifications.swift; path = "notifications example/TestSendableNotifications.swift"; sourceTree = SOURCE_ROOT; };
 		87576E8B25A7B6E6003C61D3 /* test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test.jpg; sourceTree = "<group>"; };
+		87748F8A25BCBB0A007179FA /* EditNotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditNotificationView.swift; sourceTree = "<group>"; };
 		87D0925C2599515400FE4E2C /* TestTestingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTestingView.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -110,6 +112,7 @@
 		873E753C25929B57007804ED /* notifications example */ = {
 			isa = PBXGroup;
 			children = (
+				87748F8A25BCBB0A007179FA /* EditNotificationView.swift */,
 				873E753D25929B57007804ED /* notifications_exampleApp.swift */,
 				873E753F25929B57007804ED /* ContentView.swift */,
 				873E757025929BAD007804ED /* TestingView.swift */,
@@ -287,6 +290,7 @@
 				873E754025929B57007804ED /* ContentView.swift in Sources */,
 				873E753E25929B57007804ED /* notifications_exampleApp.swift in Sources */,
 				873E754A25929B58007804ED /* notifications_example.xcdatamodeld in Sources */,
+				87748F8B25BCBB0A007179FA /* EditNotificationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -102,6 +102,10 @@ func transFormToTrigger(notificationRequests: [UNNotificationRequest]) ->  [Date
     return arrayOfDates
 }
 
+func notificationsDates() {
+    
+}
+
 
 func defineCustomActions() {
     // Define the custom actions.
