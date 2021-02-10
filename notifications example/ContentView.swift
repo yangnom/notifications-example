@@ -28,48 +28,72 @@ struct ContentView: View {
                         }
                     }
                     
-                    Button("Erase notifications") {
-                        let userNotificationCenter = UNUserNotificationCenter.current()
-                        userNotificationCenter.removeAllPendingNotificationRequests()
-                        self.upcomingNotificationDates = []
+                    Section(header: Text("Old Style")) {
+                        Button("Erase notifications") {
+                            let userNotificationCenter = UNUserNotificationCenter.current()
+                            userNotificationCenter.removeAllPendingNotificationRequests()
+                            self.upcomingNotificationDates = []
+                        }
+                        
+                        Button("Set Random Notifications") {
+                            let arrayOfRandomNotifications = randomArrayOfSendableNotifications(numberOfNotifications: 5)
+                            setNotificationsWithDates(notifications: arrayOfRandomNotifications)
+                            
+                            let future = futureUpcomingNotificationRequests()
+
+                            future
+                                .map() {
+                                    notificationRequestsToDates(notificationRequests: $0)
+                                }
+                                .sink(receiveCompletion: {
+                                    print("Completed with,", $0)
+                                },
+                                receiveValue: {
+                                    print("Recieved \($0) as an array of Dates")
+                                    upcomingNotificationDates = $0
+                                })
+                                .store(in: &subscriptions)
+                        }
+          
+                        // TODO: Make a function out of this
+                        // Has a completion block that outputs [Date]
+                        // Need to figure out what to do with subscriptions
+                        // I'll do this when I understand subscriptions better
+                        Button("Update Pending Notifications view") {
+                            let future = futureUpcomingNotificationRequests()
+
+                            future
+                                .map() {
+                                    notificationRequestsToDates(notificationRequests: $0)
+                                }
+                                .sink(receiveCompletion: {
+                                    print("Completed with,", $0)
+                                },
+                                receiveValue: {
+                                    print("Recieved \($0) as an array of Dates")
+                                    upcomingNotificationDates = $0
+                                })
+                                .store(in: &subscriptions)
+                        }
+                        
+                        Button("Set notification without updateView") {
+                            setNotification(date: Date().addingTimeInterval(80000))
+                        }
+                        
                     }
                     
-                    Button("Set Random Notifications") {
-                        let arrayOfRandomNotifications = randomArrayOfSendableNotifications(numberOfNotifications: 5)
-                        setNotificationsWithDates(notifications: arrayOfRandomNotifications)
-                        
-                        let future = futureUpcomingNotificationRequests()
-                        
-                        future
-                            .map() {
-                                notificationRequestsToDates(notificationRequests: $0)
-                            }
-                            .sink(receiveCompletion: {
-                                print("Completed with,", $0)
-                            },
-                            receiveValue: {
-                                print("Recieved \($0) as an array of Dates")
-                                upcomingNotificationDates = $0
-                            })
-                            .store(in: &subscriptions)
+                    Section(header: Text("In Progress")) {
+                        Button("updatePending with future function") {
+                            // This needs to do the work of taking the notification Requests and -> [Date]
+                            // should be in an easy function to access
+                            
+                        }
                     }
                     
-                    Button("updatePendingView") {
-                        let future = futureUpcomingNotificationRequests()
-                        
-                        future
-                            .map() {
-                                notificationRequestsToDates(notificationRequests: $0)
-                            }
-                            .sink(receiveCompletion: {
-                                print("Completed with,", $0)
-                            },
-                            receiveValue: {
-                                print("Recieved \($0) as an array of Dates")
-                                upcomingNotificationDates = $0
-                            })
-                            .store(in: &subscriptions)
+                    NavigationLink(destination: TestingView()) {
+                        Text("Testing View")
                     }
+                    
                     NavigationLink(destination: EditNotificationView()) {
                         Text("Make Notification")
                     }.navigationBarTitle(Text("Notifications"))

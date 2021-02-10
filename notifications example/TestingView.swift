@@ -19,43 +19,9 @@ struct TestingView: View {
         VStack {
             Form {
                 Button("Passes [UNNotificationRequest]") {
-                    let future = futureUpcomingNotificationRequests()
-                    
-                    
-                    future
-                        .sink(receiveCompletion: {
-                            print("Completed with,", $0)
-                        },
-                        receiveValue: {
-                            print("Recieved \($0) as an array of notifications")
-                        })
-                        .store(in: &subscriptions)
-                }
-                
-                Button("Turn it into several NotificationRequests") {
-                    let future = futureUpcomingNotificationRequests()
-                    
-                    
-                    future
-                        .map() {
-                            notificationRequestsToDates(notificationRequests: $0)
-                        }
-                        .sink(receiveCompletion: {
-                            print("Completed with,", $0)
-                        },
-                        receiveValue: {
-                            print("Recieved \($0) as an array of Dates")
-                        })
-                        .store(in: &subscriptions)
-                }
-                
-                Button("copyPasta") {
                     
                 }
-                
-                Button("Straight example") {
-                    
-                }
+
                 
             }
         }

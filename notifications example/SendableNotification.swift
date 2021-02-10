@@ -9,79 +9,45 @@ import Foundation
 import NotificationCenter
 import Combine
 
-struct SendableNotification {
-    let dateComponents: DateComponents
-    let content: UNMutableNotificationContent
-    let actionable: Bool
-    let picture: Bool
+
+// MARK: Setting Notifications
+enum NotificationTypes {
+    case action
+    case picture
+    case normal
+}
+
+func notificationContent(title: String, subtitle: String, type: NotificationTypes = .normal) -> UNMutableNotificationContent {
+
+    let content = UNMutableNotificationContent()
+    content.title = "This is title"
+    content.subtitle = "This is subtitle"
+    content.sound = UNNotificationSound.default
     
-    init(time: Date, title: String, subtitle: String, actionable: Bool = false, picture: Bool = false, sound: UNNotificationSound = UNNotificationSound.default) {
-        
-        dateComponents = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: time)
-        
-        self.actionable = actionable
-        self.picture = picture
-        // give the notification content
-        content = UNMutableNotificationContent()
-        // make a unit test for this
-        content.title = title
-        content.subtitle = subtitle
-        content.sound = sound
+    if type == .action { content.categoryIdentifier = "MEETING_INVITATION" }
+    if type == .picture {
+        let fileURL: URL = Bundle.main.url(forResource: "test", withExtension: "jpg")!
+        let attachement = try? UNNotificationAttachment(identifier: "attachment", url: fileURL, options: nil)
+        content.attachments = [attachement!]
+    }
+    
+    return content
+}
+
+func setNotification(date: Date) {
+    let dateComponents = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: date)
+    
+    // setup the trigger and request
+    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+    let request = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent(title: "Title", subtitle: "Subtitle"), trigger: trigger)
+    UNUserNotificationCenter.current().add(request) {error in
+        if let error = error {
+            fatalError("There is an error: \(error.localizedDescription)")
+        }
     }
 }
 
-// MARK: Notification functions
-func setNotificationsWithDates(notifications: [SendableNotification])  {
-    
-    for notification in notifications {
-        
-        if notification.actionable == true {
-            notification.content.categoryIdentifier = "MEETING_INVITATION"
-        } else if notification.picture == true {
-            let fileURL: URL = Bundle.main.url(forResource: "test", withExtension: "jpg")! //  your disk file url, support image, audio, movie
-            
-            let attachement = try? UNNotificationAttachment(identifier: "attachment", url: fileURL, options: nil)
-            notification.content.attachments = [attachement!]
-        }
-        
-        // setup the trigger and request
-        let trigger = UNCalendarNotificationTrigger(dateMatching: notification.dateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: notification.content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request) {error in
-            if let error = error {
-                fatalError("There is an error: \(error.localizedDescription)")
-            }
-        }
-        
-        print("Notification Date: \(String(describing: trigger.nextTriggerDate()?.description))")
-    }
-    
-}
-
-func numberOfPendingNotifications() -> [Date] {
-    
-    let currentUNuserNotificationCenter = UNUserNotificationCenter.current()
-    var arrayOfDates: [Date] = []
-    let sema = DispatchSemaphore(value: 0)
-    
-    currentUNuserNotificationCenter.getPendingNotificationRequests { requests in
-        // if there are no notifications the for loop won't run, so let's update the view
-        if requests.count == 0 {
-            print("No notifications")
-            arrayOfDates = []
-        }
-        arrayOfDates = []
-        for request in requests {
-            let realTrigger = request.trigger as? UNCalendarNotificationTrigger
-            arrayOfDates.append((realTrigger?.nextTriggerDate())!)
-            print("array of dates is \(arrayOfDates)")
-        }
-        sema.signal()
-    }
-    sema.wait()
-    
-    return arrayOfDates
-}
+// MARK: Upcoming notifications update
 
 func futureUpcomingNotificationRequests(notificationCenter: UNUserNotificationCenter = UNUserNotificationCenter.current()) -> Future<[UNNotificationRequest], Never> {
     Future<[UNNotificationRequest], Never> { promise in
@@ -90,6 +56,28 @@ func futureUpcomingNotificationRequests(notificationCenter: UNUserNotificationCe
                 promise(.success(requests))
         }
     }
+}
+
+func updateNotificationView(subscriptions: Set<AnyCancellable>, closure: @escaping ([Date]) -> ()) {
+    var subscriptions = subscriptions
+//    let future = CurrentValueSubject<[UNNotificationRequest], Never>([randomNotificationRequest(),
+//                randomNotificationRequest(),
+//                randomNotificationRequest()])
+    let future = futureUpcomingNotificationRequests()
+
+    future
+        .map() {
+            notificationRequestsToDates(notificationRequests: $0)
+        }
+        .sink(receiveCompletion: {
+            print("Completed with,", $0)
+        },
+        receiveValue: {
+            print("Recieved \($0) as an array of Dates")
+            closure($0)
+        })
+        .store(in: &subscriptions)
+    
 }
 
 func notificationRequestsToDates(notificationRequests: [UNNotificationRequest]) ->  [Date] {
@@ -129,7 +117,18 @@ func defineCustomActions() {
     
 }
 
+
+
+
 // MARK: Randoms for testing
+func randomNotificationRequest() -> UNNotificationRequest {
+    // setup the trigger and request
+    let dateComponents = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: randomDate())
+    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+    let request = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent(title: "Random title", subtitle: "Random subtitle"), trigger: trigger)
+    return request
+}
+
 func randomDate() -> Date {
     let randomSeconds = Double.random(in: 0...90000)
     let date = Date().addingTimeInterval(randomSeconds)
@@ -182,4 +181,80 @@ extension Date {
         
         return timeStamp
     }
+}
+
+
+
+// MARK: Old code
+struct SendableNotification {
+    let dateComponents: DateComponents
+    let content: UNMutableNotificationContent
+    let actionable: Bool
+    let picture: Bool
+    
+    init(time: Date, title: String, subtitle: String, actionable: Bool = false, picture: Bool = false, sound: UNNotificationSound = UNNotificationSound.default) {
+        
+        dateComponents = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: time)
+        
+        self.actionable = actionable
+        self.picture = picture
+        // give the notification content
+        content = UNMutableNotificationContent()
+        // make a unit test for this
+        content.title = title
+        content.subtitle = subtitle
+        content.sound = sound
+    }
+}
+
+func setNotificationsWithDates(notifications: [SendableNotification])  {
+    
+    for notification in notifications {
+        
+        if notification.actionable == true {
+            notification.content.categoryIdentifier = "MEETING_INVITATION"
+        } else if notification.picture == true {
+            let fileURL: URL = Bundle.main.url(forResource: "test", withExtension: "jpg")! //  your disk file url, support image, audio, movie
+            
+            let attachement = try? UNNotificationAttachment(identifier: "attachment", url: fileURL, options: nil)
+            notification.content.attachments = [attachement!]
+        }
+        
+        // setup the trigger and request
+        let trigger = UNCalendarNotificationTrigger(dateMatching: notification.dateComponents, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: notification.content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) {error in
+            if let error = error {
+                fatalError("There is an error: \(error.localizedDescription)")
+            }
+        }
+        
+        print("Notification Date: \(String(describing: trigger.nextTriggerDate()?.description))")
+    }
+    
+}
+
+func numberOfPendingNotifications() -> [Date] {
+    
+    let currentUNuserNotificationCenter = UNUserNotificationCenter.current()
+    var arrayOfDates: [Date] = []
+    let sema = DispatchSemaphore(value: 0)
+    
+    currentUNuserNotificationCenter.getPendingNotificationRequests { requests in
+        // if there are no notifications the for loop won't run, so let's update the view
+        if requests.count == 0 {
+            print("No notifications")
+            arrayOfDates = []
+        }
+        arrayOfDates = []
+        for request in requests {
+            let realTrigger = request.trigger as? UNCalendarNotificationTrigger
+            arrayOfDates.append((realTrigger?.nextTriggerDate())!)
+            print("array of dates is \(arrayOfDates)")
+        }
+        sema.signal()
+    }
+    sema.wait()
+    
+    return arrayOfDates
 }
