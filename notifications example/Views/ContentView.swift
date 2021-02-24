@@ -28,9 +28,9 @@ struct ContentView: View {
                         }
                     }
                     
-                    Section(header: Text("Old Style")) {
+                    Section(header: Text("Notification Testing")) {
                         Button("Erase notifications") {
-                             removeAllNotifications()
+                            removeAllNotifications()
                             
                             notificationRequests() { requests in
                                 self.upcomingNotificationDates = requests.map { $0.toDate() }
@@ -39,23 +39,22 @@ struct ContentView: View {
                         }
                         
                         Button("Set Random Notifications") {
-                            let arrayOfRandomNotifications = randomArrayOfSendableNotifications(numberOfNotifications: 5)
-                            setNotificationsWithDates(notifications: arrayOfRandomNotifications)
+                            setNotificationsWithDates(notifications: randomArrayOfSendableNotifications(numberOfNotifications: 5))
                             
                             notificationRequests() { requests in
                                 self.upcomingNotificationDates = requests.map { $0.toDate() }
                             }
                         }
-          
+                        
                         Button("Update Pending Notifications view") {
                             notificationRequests() { requests in
                                 self.upcomingNotificationDates = requests.map { $0.toDate() }
                             }
                         }
                         
-//                        Button("Set notification without updateView") {
-//                            setNotification(date: Date().addingTimeInterval(80000))
-//                        }
+                        //                        Button("Set notification without updateView") {
+                        //                            setNotification(date: Date().addingTimeInterval(80000))
+                        //                        }
                         
                     }
                     

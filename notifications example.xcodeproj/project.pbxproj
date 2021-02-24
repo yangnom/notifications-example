@@ -112,8 +112,8 @@
 		873E753C25929B57007804ED /* notifications example */ = {
 			isa = PBXGroup;
 			children = (
-				87ADAE8A25E7034500E3A605 /* Views */,
 				873E753D25929B57007804ED /* notifications_exampleApp.swift */,
+				87ADAE8A25E7034500E3A605 /* Views */,
 				873E757025929BAD007804ED /* TestingView.swift */,
 				873E757525929BD4007804ED /* SendableNotification.swift */,
 				873E754125929B58007804ED /* Assets.xcassets */,
