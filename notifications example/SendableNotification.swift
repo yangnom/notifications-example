@@ -76,55 +76,6 @@ func setNotification(date: Date) {
     }
 }
 
-// MARK: Upcoming notifications update
-
-func futureUpcomingNotificationRequests(notificationCenter: UNUserNotificationCenter = UNUserNotificationCenter.current()) -> Future<[UNNotificationRequest], Never> {
-    Future<[UNNotificationRequest], Never> { promise in
-        print("Original")
-        notificationCenter.getPendingNotificationRequests { requests in
-                promise(.success(requests))
-        }
-    }
-}
-
-func updateNotificationView(subscriptions: Set<AnyCancellable>, closure: @escaping ([Date]) -> ()) {
-    var subscriptions = subscriptions
-//    let future = CurrentValueSubject<[UNNotificationRequest], Never>([randomNotificationRequest(),
-//                randomNotificationRequest(),
-//                randomNotificationRequest()])
-    let future = futureUpcomingNotificationRequests()
-
-    future
-        .map() {
-            notificationRequestsToDates(notificationRequests: $0)
-        }
-        .sink(receiveCompletion: {
-            print("Completed with,", $0)
-        },
-        receiveValue: {
-            print("Recieved \($0) as an array of Dates")
-            closure($0)
-        })
-        .store(in: &subscriptions)
-    
-}
-
-func notificationRequestsToDates(notificationRequests: [UNNotificationRequest]) ->  [Date] {
-    var arrayOfDates: [Date] = []
-    for request in notificationRequests {
-        let realTrigger = request.trigger as? UNCalendarNotificationTrigger
-        arrayOfDates.append((realTrigger?.nextTriggerDate())!)
-    }
-//    return notificationRequest.trigger as! UNCalendarNotificationTrigger
-    return arrayOfDates
-}
-
-
-func notificationsDates() {
-    
-}
-
-
 func defineCustomActions() {
     // Define the custom actions.
     let acceptAction = UNNotificationAction(identifier: "ACCEPT_ACTION",
@@ -212,8 +163,6 @@ extension Date {
     }
 }
 
-
-
 // MARK: Old code
 struct SendableNotification {
     let dateComponents: DateComponents
@@ -263,27 +212,29 @@ func setNotificationsWithDates(notifications: [SendableNotification])  {
     
 }
 
-func numberOfPendingNotifications() -> [Date] {
-    
-    let currentUNuserNotificationCenter = UNUserNotificationCenter.current()
-    var arrayOfDates: [Date] = []
-    let sema = DispatchSemaphore(value: 0)
-    
-    currentUNuserNotificationCenter.getPendingNotificationRequests { requests in
-        // if there are no notifications the for loop won't run, so let's update the view
-        if requests.count == 0 {
-            print("No notifications")
-            arrayOfDates = []
-        }
-        arrayOfDates = []
-        for request in requests {
-            let realTrigger = request.trigger as? UNCalendarNotificationTrigger
-            arrayOfDates.append((realTrigger?.nextTriggerDate())!)
-            print("array of dates is \(arrayOfDates)")
-        }
-        sema.signal()
-    }
-    sema.wait()
-    
-    return arrayOfDates
-}
+
+//TODO: Look over this function and figure out semaPhores
+//func numberOfPendingNotifications() -> [Date] {
+//
+//    let currentUNuserNotificationCenter = UNUserNotificationCenter.current()
+//    var arrayOfDates: [Date] = []
+//    let sema = DispatchSemaphore(value: 0)
+//
+//    currentUNuserNotificationCenter.getPendingNotificationRequests { requests in
+//        // if there are no notifications the for loop won't run, so let's update the view
+//        if requests.count == 0 {
+//            print("No notifications")
+//            arrayOfDates = []
+//        }
+//        arrayOfDates = []
+//        for request in requests {
+//            let realTrigger = request.trigger as? UNCalendarNotificationTrigger
+//            arrayOfDates.append((realTrigger?.nextTriggerDate())!)
+//            print("array of dates is \(arrayOfDates)")
+//        }
+//        sema.signal()
+//    }
+//    sema.wait()
+//
+//    return arrayOfDates
+//}

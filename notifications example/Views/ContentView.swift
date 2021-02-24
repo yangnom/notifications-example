@@ -52,9 +52,9 @@ struct ContentView: View {
                             }
                         }
                         
-                                                Button("Set notification without updateView") {
-                                                    setNotification(date: Date().addingTimeInterval(80000))
-                                                }
+                        Button("Set notification without updateView") {
+                            setNotification(date: Date().addingTimeInterval(80000))
+                        }
                         
                     }
                     
