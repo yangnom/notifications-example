@@ -58,6 +58,11 @@ struct ContentView: View {
                         
                     }
                     
+                    Section(header: Text("Testing")) {
+                        Button("make notification") {
+                            setANotificationNew()
+                        }
+                    }
                     
                     NavigationLink(destination: TestingView()) {
                         Text("Testing View")

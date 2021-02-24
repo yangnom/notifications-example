@@ -48,10 +48,34 @@ func notificationContent(title: String = "title",
     return content
 }
 
+extension UNMutableNotificationContent {
+    func trigger(dateComponents: DateComponents) -> UNCalendarNotificationTrigger {
+        UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+    }
+}
+
 extension UNNotificationRequest {
     func toDate() ->  Date {
         let realTrigger = self.trigger as? UNCalendarNotificationTrigger
         return (realTrigger?.nextTriggerDate())!
+    }
+}
+
+extension Date {
+    func toDateComponents() -> DateComponents{
+        Calendar.current.dateComponents([.day, .hour, .minute, .second], from: self)
+    }
+}
+
+func setANotificationNew() {
+    let content = notificationContent()
+    let trigger = content.trigger(dateComponents: Date().toDateComponents())
+    
+    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+    UNUserNotificationCenter.current().add(request) {error in
+        if let error = error {
+            fatalError("There is an error: \(error.localizedDescription)")
+        }
     }
 }
 
