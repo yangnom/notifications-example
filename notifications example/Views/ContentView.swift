@@ -33,8 +33,7 @@ struct ContentView: View {
                              removeAllNotifications()
                             
                             notificationRequests() { requests in
-                                self.upcomingNotificationDates = requests
-                                    .map { $0.toDate() }
+                                self.upcomingNotificationDates = requests.map { $0.toDate() }
                             }
                             
                         }
@@ -43,56 +42,23 @@ struct ContentView: View {
                             let arrayOfRandomNotifications = randomArrayOfSendableNotifications(numberOfNotifications: 5)
                             setNotificationsWithDates(notifications: arrayOfRandomNotifications)
                             
-                            let future = futureUpcomingNotificationRequests()
-
-                            future
-                                .map() {
-                                    notificationRequestsToDates(notificationRequests: $0)
-                                }
-                                .sink(receiveCompletion: {
-                                    print("Completed with,", $0)
-                                },
-                                receiveValue: {
-                                    print("Recieved \($0) as an array of Dates")
-                                    upcomingNotificationDates = $0
-                                })
-                                .store(in: &subscriptions)
+                            notificationRequests() { requests in
+                                self.upcomingNotificationDates = requests.map { $0.toDate() }
+                            }
                         }
           
-                        // TODO: Make a function out of this
-                        // Has a completion block that outputs [Date]
-                        // Need to figure out what to do with subscriptions
-                        // I'll do this when I understand subscriptions better
                         Button("Update Pending Notifications view") {
-                            let future = futureUpcomingNotificationRequests()
-
-                            future
-                                .map() {
-                                    notificationRequestsToDates(notificationRequests: $0)
-                                }
-                                .sink(receiveCompletion: {
-                                    print("Completed with,", $0)
-                                },
-                                receiveValue: {
-                                    print("Recieved \($0) as an array of Dates")
-                                    upcomingNotificationDates = $0
-                                })
-                                .store(in: &subscriptions)
+                            notificationRequests() { requests in
+                                self.upcomingNotificationDates = requests.map { $0.toDate() }
+                            }
                         }
                         
-                        Button("Set notification without updateView") {
-                            setNotification(date: Date().addingTimeInterval(80000))
-                        }
+//                        Button("Set notification without updateView") {
+//                            setNotification(date: Date().addingTimeInterval(80000))
+//                        }
                         
                     }
                     
-                    Section(header: Text("In Progress")) {
-                        Button("updatePending with future function") {
-                            // This needs to do the work of taking the notification Requests and -> [Date]
-                            // should be in an easy function to access
-                            
-                        }
-                    }
                     
                     NavigationLink(destination: TestingView()) {
                         Text("Testing View")
