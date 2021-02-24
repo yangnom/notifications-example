@@ -17,6 +17,37 @@ enum NotificationTypes {
     case normal
 }
 
+struct SendableNotification {
+    let dateComponents: DateComponents
+    let content: UNMutableNotificationContent
+    let actionable: Bool
+    let picture: Bool
+    
+    init(time: Date, title: String, subtitle: String, actionable: Bool = false, picture: Bool = false, sound: UNNotificationSound = UNNotificationSound.default) {
+        
+        dateComponents = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: time)
+        
+        self.actionable = actionable
+        self.picture = picture
+        // give the notification content
+        content = UNMutableNotificationContent()
+        // make a unit test for this
+        content.title = title
+        content.subtitle = subtitle
+        content.sound = sound
+    }
+}
+
+func notificationContent(title: String = "title",
+                         subtitle: String = "subtitle",
+                         sound: UNNotificationSound = UNNotificationSound.default) -> UNMutableNotificationContent {
+    let content = UNMutableNotificationContent()
+    content.title = title
+    content.subtitle = subtitle
+    content.sound = sound
+    return content
+}
+
 extension UNNotificationRequest {
     func toDate() ->  Date {
         let realTrigger = self.trigger as? UNCalendarNotificationTrigger
@@ -160,28 +191,6 @@ extension Date {
         let timeStamp = dateFormatter.string(from: self)
         
         return timeStamp
-    }
-}
-
-// MARK: Old code
-struct SendableNotification {
-    let dateComponents: DateComponents
-    let content: UNMutableNotificationContent
-    let actionable: Bool
-    let picture: Bool
-    
-    init(time: Date, title: String, subtitle: String, actionable: Bool = false, picture: Bool = false, sound: UNNotificationSound = UNNotificationSound.default) {
-        
-        dateComponents = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: time)
-        
-        self.actionable = actionable
-        self.picture = picture
-        // give the notification content
-        content = UNMutableNotificationContent()
-        // make a unit test for this
-        content.title = title
-        content.subtitle = subtitle
-        content.sound = sound
     }
 }
 
