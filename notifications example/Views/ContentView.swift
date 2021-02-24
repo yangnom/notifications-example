@@ -72,29 +72,9 @@ struct ContentView: View {
             }
         }
         .onAppear(perform: {
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                if success {
-                    print("All set!")
-                } else if let error = error {
-                    print(error.localizedDescription)
-                }
-            }
+            askForPermission()
             defineCustomActions()
-            
-            let future = futureUpcomingNotificationRequests()
-            
-            future
-                .map() {
-                    notificationRequestsToDates(notificationRequests: $0)
-                }
-                .sink(receiveCompletion: {
-                    print("Completed with,", $0)
-                },
-                receiveValue: {
-                    print("Recieved \($0) as an array of Dates")
-                    upcomingNotificationDates = $0
-                })
-                .store(in: &subscriptions)
+            notificationRequests() { self.upcomingNotificationDates = $0.map {$0.toDate() }}
         })
         
     }
