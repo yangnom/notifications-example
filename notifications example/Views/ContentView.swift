@@ -30,9 +30,22 @@ struct ContentView: View {
                     
                     Section(header: Text("Old Style")) {
                         Button("Erase notifications") {
-                            let userNotificationCenter = UNUserNotificationCenter.current()
-                            userNotificationCenter.removeAllPendingNotificationRequests()
-                            self.upcomingNotificationDates = []
+                             removeAllNotifications()
+                            
+                            let future = futureUpcomingNotificationRequests()
+
+                            future
+                                .map() {
+                                    notificationRequestsToDates(notificationRequests: $0)
+                                }
+                                .sink(receiveCompletion: {
+                                    print("Completed with,", $0)
+                                },
+                                receiveValue: {
+                                    print("Recieved \($0) as an array of Dates")
+                                    upcomingNotificationDates = $0
+                                })
+                                .store(in: &subscriptions)
                         }
                         
                         Button("Set Random Notifications") {

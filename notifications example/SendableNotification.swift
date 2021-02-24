@@ -17,6 +17,10 @@ enum NotificationTypes {
     case normal
 }
 
+func removeAllNotifications() {
+    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+}
+
 func notificationContent(title: String, subtitle: String, type: NotificationTypes = .normal) -> UNMutableNotificationContent {
 
     let content = UNMutableNotificationContent()
