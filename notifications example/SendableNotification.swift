@@ -67,9 +67,11 @@ extension Date {
     }
 }
 
-func setANotificationNew() {
-    let content = notificationContent()
-    let trigger = content.trigger(dateComponents: Date().toDateComponents())
+func setANotificationNew(title: String = "title",
+                         subtitle: String = "subtitle",
+                         date: Date = Date().addingTimeInterval(10)) {
+    let content = notificationContent(title: title, subtitle: subtitle)
+    let trigger = content.trigger(dateComponents: date.toDateComponents())
     
     let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
     UNUserNotificationCenter.current().add(request) {error in
