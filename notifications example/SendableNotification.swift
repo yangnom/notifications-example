@@ -17,6 +17,21 @@ enum NotificationTypes {
     case normal
 }
 
+extension UNNotificationRequest {
+    func toDate() ->  Date {
+        let realTrigger = self.trigger as? UNCalendarNotificationTrigger
+        return (realTrigger?.nextTriggerDate())!
+    }
+}
+
+// need to properly test, or ask, if this always serially
+func notificationRequests(closure: @escaping ([UNNotificationRequest]) -> ()) {
+    UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: { requests in
+//        promise(.success(requests))
+        closure(requests)
+    })
+}
+
 func removeAllNotifications() {
     UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
 }
