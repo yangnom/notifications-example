@@ -112,9 +112,8 @@
 		873E753C25929B57007804ED /* notifications example */ = {
 			isa = PBXGroup;
 			children = (
-				87748F8A25BCBB0A007179FA /* EditNotificationView.swift */,
+				87ADAE8A25E7034500E3A605 /* Views */,
 				873E753D25929B57007804ED /* notifications_exampleApp.swift */,
-				873E753F25929B57007804ED /* ContentView.swift */,
 				873E757025929BAD007804ED /* TestingView.swift */,
 				873E757525929BD4007804ED /* SendableNotification.swift */,
 				873E754125929B58007804ED /* Assets.xcassets */,
@@ -152,6 +151,15 @@
 				873E756125929B58007804ED /* Info.plist */,
 			);
 			path = "notifications exampleUITests";
+			sourceTree = "<group>";
+		};
+		87ADAE8A25E7034500E3A605 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				87748F8A25BCBB0A007179FA /* EditNotificationView.swift */,
+				873E753F25929B57007804ED /* ContentView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
