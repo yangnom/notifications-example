@@ -84,7 +84,6 @@ func setANotificationNew(title: String = "title",
 // need to properly test, or ask, if this always serially
 func notificationRequests(closure: @escaping ([UNNotificationRequest]) -> ()) {
     UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: { requests in
-//        promise(.success(requests))
         closure(requests)
     })
 }
@@ -167,24 +166,11 @@ func randomNotificationRequest() -> UNNotificationRequest {
 }
 
 func randomDate() -> Date {
-    let randomSeconds = Double.random(in: 0...90000)
-    let date = Date().addingTimeInterval(randomSeconds)
-    return date
+    Date().addingTimeInterval(Double.random(in: 0...90000))
 }
 
 func randomDateComponents() -> DateComponents {
-    let dateComponents = DateComponents(hour: Int.random(in: 0...24), minute: Int.random(in: 0...60))
-    return dateComponents
-}
-
-func randomNotificationContent() -> UNMutableNotificationContent {
-    let content = UNMutableNotificationContent()
-    // make a unit test for this
-    content.title = "Title is: \(UUID().uuidString)"
-    content.subtitle = "subtitle is: \(UUID().uuidString)"
-    content.sound = UNNotificationSound.default
-    
-    return UNMutableNotificationContent()
+    DateComponents(hour: Int.random(in: 0...24), minute: Int.random(in: 0...60))
 }
 
 func randomArrayOfSendableNotifications(numberOfNotifications: Int) -> [SendableNotification] {

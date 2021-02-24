@@ -62,6 +62,10 @@ struct ContentView: View {
                         Button("make notification") {
                             setANotificationNew()
                         }
+                        
+                        Button("Make 5 random notifications") {
+                            // make the notifications
+                        }
                     }
                     
                     NavigationLink(destination: TestingView()) {
