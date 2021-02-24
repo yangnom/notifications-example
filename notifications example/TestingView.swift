@@ -12,7 +12,7 @@ struct TestingView: View {
     
     var body: some View {
         VStack {
-
+            Text("Hi")
         }
     }
 }
