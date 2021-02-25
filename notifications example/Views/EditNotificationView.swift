@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EditNotificationView: View {
-    @State var selectedDate: Date = Date()
+    @State var selectedDate: Date
     @State var selection: Int = 2
     
     var body: some View {
@@ -37,20 +37,9 @@ struct EditNotificationView: View {
                 .navigationBarTitle(Text("Make a notification"))
             }
             Button("Save") {
-//                var sendableNotification: SendableNotification?
-//                if selection == 0 {
-//                    sendableNotification = SendableNotification(time: selectedDate, title: "Picture", subtitle: "worked", picture: true)
-//                } else if selection == 1 {
-//                    sendableNotification = SendableNotification(time: selectedDate, title: "Actionable", subtitle: "worked", actionable: true)
-//                } else {
-//                    sendableNotification = SendableNotification(time: selectedDate, title: "Normal", subtitle: "worked")
-//                }
-//                
-//                if sendableNotification != nil {
-//                    setNotificationsWithDates(notifications: [sendableNotification!])
-//                }
-
-                // needs return from this view to ContentView action here
+                //erase previous notification
+                // set new notification
+                setNotification(date: selectedDate)
             }
         }
     }
@@ -58,6 +47,6 @@ struct EditNotificationView: View {
 
 struct EditNotificationView_Previews: PreviewProvider {
     static var previews: some View {
-        EditNotificationView()
+        EditNotificationView(selectedDate: Date())
     }
 }

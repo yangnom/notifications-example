@@ -24,7 +24,7 @@ struct ContentView: View {
                     
                     Section(header: Text("Upcoming notifications")) {
                         ForEach(upcomingNotificationDates, id: \.self) { date in
-                            NavigationLink(destination: Text("THERE")){
+                            NavigationLink(destination: EditNotificationView(selectedDate: date)){
                             Text(date.convertDateFormatter())
                             }
                         }
@@ -65,7 +65,7 @@ struct ContentView: View {
                         Text("Testing View")
                     }
                     
-                    NavigationLink(destination: EditNotificationView()) {
+                    NavigationLink(destination: EditNotificationView(selectedDate: Date())) {
                         Text("Make Notification")
                     }.navigationBarTitle(Text("Notifications"))
                 }
