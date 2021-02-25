@@ -24,7 +24,7 @@ struct ContentView: View {
                 Form {
                     
                     Section(header: Text("Upcoming notifications")) {
-                        ForEach(upcomingNotificationRequests, id: \.self) { request in
+                        ForEach(upcomingNotificationRequests.sorted(), id: \.self) { request in
                             
                             NavigationLink(destination: EditNotificationView(request: request)){
                                 Text("\(request.toDate().convertDateFormatter())")

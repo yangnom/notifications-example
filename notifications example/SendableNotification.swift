@@ -182,13 +182,21 @@ enum NotificationTypes {
     case normal
 }
 
+//TODO: I hacked this together... figure out what I'm doing
+//      and if I'm doing it right
 extension UNNotificationRequest: Comparable {
     public static func < (lrequest: UNNotificationRequest, rrequest: UNNotificationRequest) -> Bool {
-       return true
+        if lrequest.toDate() != rrequest.toDate() {
+            return lrequest.toDate() < rrequest.toDate()
+        }
+        return true
     }
     
     static func == (lrequest: UNNotificationRequest, rrequest: UNNotificationRequest) -> Bool {
-        return true
+        if lrequest.toDate() == rrequest.toDate() {
+            return true } else {
+                return false
+            }
     }
 
 }
