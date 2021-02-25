@@ -24,7 +24,9 @@ struct ContentView: View {
                     
                     Section(header: Text("Upcoming notifications")) {
                         ForEach(upcomingNotificationDates, id: \.self) { date in
+                            NavigationLink(destination: Text("THERE")){
                             Text(date.convertDateFormatter())
+                            }
                         }
                     }
                     
@@ -53,8 +55,8 @@ struct ContentView: View {
                             }
                         }
                         
-                        Button("Set notification without updateView") {
-                            setNotification(date: Date().addingTimeInterval(80000))
+                        Button("Set notification without updateView in 10 seconds") {
+                            setNotification()
                         }
                         
                     }

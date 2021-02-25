@@ -9,7 +9,7 @@ import Foundation
 import NotificationCenter
 import Combine
 
-func setNotification(date: Date,
+func setNotification(date: Date = Date().addingTimeInterval(10),
                      title: String = "Title",
                      subtitle: String = "Subtitle",
                      sound: UNNotificationSound = UNNotificationSound.default,
@@ -55,6 +55,7 @@ extension DateComponents {
         UNCalendarNotificationTrigger(dateMatching: self, repeats: repeats)
     }
 }
+
 
 func setRandomNotifications(numberOfNotifications: Int = 1) {
     for _ in 1...numberOfNotifications {
@@ -137,6 +138,12 @@ extension Date {
     }
 }
 
+extension UNNotificationRequest {
+    func toDate() ->  Date {
+        let realTrigger = self.trigger as? UNCalendarNotificationTrigger
+        return (realTrigger?.nextTriggerDate())!
+    }
+}
 
 //TODO: Look over this function and figure out semaPhores
 //func numberOfPendingNotifications() -> [Date] {
