@@ -39,7 +39,6 @@ struct ContentView: View {
                             removeAllNotifications()
                             
                             pendingNotificationRequests() { requests in
-//                                self.upcomingNotificationDates = requests.map { $0.toDate() }
                                 self.upcomingNotificationRequests = requests
                             }
                             
@@ -50,14 +49,12 @@ struct ContentView: View {
                             setRandomNotifications(numberOfNotifications: 5)
                             
                             pendingNotificationRequests() { requests in
-//                                self.upcomingNotificationDates = requests.map { $0.toDate() }
                                 self.upcomingNotificationRequests = requests
                             }
                         }
                         
                         Button("Update Pending Notifications view") {
                             pendingNotificationRequests() { requests in
-//                                self.upcomingNotificationDates = requests.map { $0.toDate() }
                                 self.upcomingNotificationRequests = requests
                             }
                         }

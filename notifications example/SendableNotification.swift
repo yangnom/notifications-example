@@ -181,3 +181,14 @@ enum NotificationTypes {
     case picture
     case normal
 }
+
+extension UNNotificationRequest: Comparable {
+    public static func < (lrequest: UNNotificationRequest, rrequest: UNNotificationRequest) -> Bool {
+       return true
+    }
+    
+    static func == (lrequest: UNNotificationRequest, rrequest: UNNotificationRequest) -> Bool {
+        return true
+    }
+
+}
