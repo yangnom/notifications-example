@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct EditNotificationView: View {
-    @State var selectedDate: Date
+    var request: UNNotificationRequest
+    //TODO: start with the input Date
+    @State var selectedDate: Date = Date()
     @State var selection: Int = 2
     
     var body: some View {
@@ -37,16 +39,20 @@ struct EditNotificationView: View {
                 .navigationBarTitle(Text("Make a notification"))
             }
             Button("Save") {
-                //erase previous notification
-                // set new notification
+                removeANotificationRequest(request: request)
                 setNotification(date: selectedDate)
+                // go back to ContentView()
             }
         }
     }
 }
 
 struct EditNotificationView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        EditNotificationView(selectedDate: Date())
+        EditNotificationView(request: Calendar.current.dateComponents([.day, .hour, .minute, .second], from: randomDate())
+                                .trigger()
+                                .notificationRequest(content: notificationContent())
+        )
     }
 }

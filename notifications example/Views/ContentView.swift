@@ -15,6 +15,7 @@ struct ContentView: View {
     @State var upcomingNotificationDates: [Date] = []
     @State var selection: Int = 2
     @State var subscriptions = Set<AnyCancellable>()
+    @State var upcomingNotificationRequests: [UNNotificationRequest] = []
     
     
     var body: some View {
@@ -23,19 +24,23 @@ struct ContentView: View {
                 Form {
                     
                     Section(header: Text("Upcoming notifications")) {
-                        ForEach(upcomingNotificationDates, id: \.self) { date in
-                            NavigationLink(destination: EditNotificationView(selectedDate: date)){
-                            Text(date.convertDateFormatter())
+                        ForEach(upcomingNotificationRequests, id: \.self) { request in
+                            
+                            NavigationLink(destination: EditNotificationView(request: request)){
+                                Text("\(request.toDate().convertDateFormatter())")
                             }
+                            
                         }
                     }
+
                     
                     Section(header: Text("Notification Testing")) {
                         Button("Erase notifications") {
                             removeAllNotifications()
                             
                             pendingNotificationRequests() { requests in
-                                self.upcomingNotificationDates = requests.map { $0.toDate() }
+//                                self.upcomingNotificationDates = requests.map { $0.toDate() }
+                                self.upcomingNotificationRequests = requests
                             }
                             
                         }
@@ -45,13 +50,15 @@ struct ContentView: View {
                             setRandomNotifications(numberOfNotifications: 5)
                             
                             pendingNotificationRequests() { requests in
-                                self.upcomingNotificationDates = requests.map { $0.toDate() }
+//                                self.upcomingNotificationDates = requests.map { $0.toDate() }
+                                self.upcomingNotificationRequests = requests
                             }
                         }
                         
                         Button("Update Pending Notifications view") {
                             pendingNotificationRequests() { requests in
-                                self.upcomingNotificationDates = requests.map { $0.toDate() }
+//                                self.upcomingNotificationDates = requests.map { $0.toDate() }
+                                self.upcomingNotificationRequests = requests
                             }
                         }
                         
@@ -64,26 +71,25 @@ struct ContentView: View {
                     NavigationLink(destination: TestingView()) {
                         Text("Testing View")
                     }
-                    
-                    NavigationLink(destination: EditNotificationView(selectedDate: Date())) {
-                        Text("Make Notification")
-                    }.navigationBarTitle(Text("Notifications"))
                 }
                 .navigationTitle("Notification Testing")
             }
         }
-        .onAppear(perform: {
+        .onAppear() {
             askForPermission()
             defineCustomActions()
-            pendingNotificationRequests() { self.upcomingNotificationDates = $0.map {$0.toDate() }}
-        })
+            pendingNotificationRequests() { requests in
+                self.upcomingNotificationRequests = requests
+            }
+        }
         
     }
 }
 
 
 struct ContentView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        ContentView(upcomingNotificationDates: [Date(), Date().addingTimeInterval(3000)])
+        ContentView()
     }
 }

@@ -73,6 +73,10 @@ func pendingNotificationRequests(closure: @escaping ([UNNotificationRequest]) ->
     })
 }
 
+func removeANotificationRequest(request: UNNotificationRequest) {
+    UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [request.identifier])
+}
+
 func removeAllNotifications() {
     UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
 }
