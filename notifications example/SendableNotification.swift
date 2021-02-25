@@ -9,14 +9,6 @@ import Foundation
 import NotificationCenter
 import Combine
 
-
-// MARK: Setting Notifications
-enum NotificationTypes {
-    case action
-    case picture
-    case normal
-}
-
 func setNotification(date: Date,
                      title: String = "Title",
                      subtitle: String = "Subtitle",
@@ -30,19 +22,6 @@ func setNotification(date: Date,
         .notificationRequest(content: content)
     
     UNUserNotificationCenter.current().add(notificationRequest)
-}
-
-extension DateComponents {
-    func trigger(repeats: Bool = false) -> UNNotificationTrigger {
-        UNCalendarNotificationTrigger(dateMatching: self, repeats: repeats)
-    }
-}
-
-
-func setRandomNotifications(numberOfNotifications: Int = 1) {
-    for _ in 1...numberOfNotifications {
-        setNotification(date: Date().addingTimeInterval(Double.random(in: 1...9999999)))
-    }
 }
 
 func notificationContent(title: String = "title",
@@ -65,15 +44,24 @@ func notificationContent(title: String = "title",
     return content
 }
 
-//func trigger(at dateComponents: DateComponents) -> UNNotificationTrigger {
-//    UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-//}
-
 extension UNNotificationTrigger {
     func notificationRequest(content: UNNotificationContent) -> UNNotificationRequest {
         UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent(title: "Title", subtitle: "Subtitle"), trigger: self)
     }
 }
+
+extension DateComponents {
+    func trigger(repeats: Bool = false) -> UNNotificationTrigger {
+        UNCalendarNotificationTrigger(dateMatching: self, repeats: repeats)
+    }
+}
+
+func setRandomNotifications(numberOfNotifications: Int = 1) {
+    for _ in 1...numberOfNotifications {
+        setNotification(date: Date().addingTimeInterval(Double.random(in: 1...9999999)))
+    }
+}
+
 
 //MARK: Helpers
 
@@ -84,6 +72,10 @@ func pendingNotificationRequests(closure: @escaping ([UNNotificationRequest]) ->
     })
 }
 
+func removeAllNotifications() {
+    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+}
+
 func askForPermission() {
     UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
         if success {
@@ -92,10 +84,6 @@ func askForPermission() {
             print(error.localizedDescription)
         }
     }
-}
-
-func removeAllNotifications() {
-    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
 }
 
 func defineCustomActions() {
@@ -118,8 +106,6 @@ func defineCustomActions() {
     notificationCenter.setNotificationCategories([meetingInviteCategory])
     
 }
-
-
 
 
 // MARK: Randoms for testing
@@ -151,19 +137,6 @@ extension Date {
     }
 }
 
-extension UNMutableNotificationContent {
-    func trigger(dateComponents: DateComponents) -> UNCalendarNotificationTrigger {
-        UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-    }
-}
-
-extension UNNotificationRequest {
-    func toDate() ->  Date {
-        let realTrigger = self.trigger as? UNCalendarNotificationTrigger
-        return (realTrigger?.nextTriggerDate())!
-    }
-}
-
 
 //TODO: Look over this function and figure out semaPhores
 //func numberOfPendingNotifications() -> [Date] {
@@ -190,3 +163,10 @@ extension UNNotificationRequest {
 //
 //    return arrayOfDates
 //}
+
+// MARK: Setting Notifications
+enum NotificationTypes {
+    case action
+    case picture
+    case normal
+}
