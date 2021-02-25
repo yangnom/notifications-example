@@ -12,8 +12,10 @@ struct EditNotificationView: View {
     //TODO: start with the input Date
     @State var selectedDate: Date = Date()
     @State var selection: Int = 2
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
+        
         VStack {
         NavigationView {
                 Form {
@@ -41,7 +43,9 @@ struct EditNotificationView: View {
             Button("Save") {
                 removeANotificationRequest(request: request)
                 setNotification(date: selectedDate)
+                self.presentationMode.wrappedValue.dismiss()
                 // go back to ContentView()
+                // TODO: setting a date two months gives a date for the next month
             }
         }
     }
