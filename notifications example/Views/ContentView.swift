@@ -32,22 +32,23 @@ struct ContentView: View {
                         Button("Erase notifications") {
                             removeAllNotifications()
                             
-                            notificationRequests() { requests in
+                            pendingNotificationRequests() { requests in
                                 self.upcomingNotificationDates = requests.map { $0.toDate() }
                             }
                             
                         }
                         
                         Button("Set Random Notifications") {
-                            setNotificationsWithDates(notifications: randomArrayOfSendableNotifications(numberOfNotifications: 5))
                             
-                            notificationRequests() { requests in
+                            setRandomNotifications(numberOfNotifications: 5)
+                            
+                            pendingNotificationRequests() { requests in
                                 self.upcomingNotificationDates = requests.map { $0.toDate() }
                             }
                         }
                         
                         Button("Update Pending Notifications view") {
-                            notificationRequests() { requests in
+                            pendingNotificationRequests() { requests in
                                 self.upcomingNotificationDates = requests.map { $0.toDate() }
                             }
                         }
@@ -56,16 +57,6 @@ struct ContentView: View {
                             setNotification(date: Date().addingTimeInterval(80000))
                         }
                         
-                    }
-                    
-                    Section(header: Text("Testing")) {
-                        Button("make notification") {
-                            setANotificationNew()
-                        }
-                        
-                        Button("Make 5 random notifications") {
-                            // make the notifications
-                        }
                     }
                     
                     NavigationLink(destination: TestingView()) {
@@ -82,7 +73,7 @@ struct ContentView: View {
         .onAppear(perform: {
             askForPermission()
             defineCustomActions()
-            notificationRequests() { self.upcomingNotificationDates = $0.map {$0.toDate() }}
+            pendingNotificationRequests() { self.upcomingNotificationDates = $0.map {$0.toDate() }}
         })
         
     }
