@@ -9,7 +9,6 @@ import SwiftUI
 
 struct EditNotificationView: View {
     var request: UNNotificationRequest
-    //TODO: start with the input Date
     @State var selectedDate: Date = Date()
     @State var selection: Int = 2
     @Environment(\.presentationMode) var presentationMode
@@ -47,6 +46,7 @@ struct EditNotificationView: View {
                 removeANotificationRequest(request: request)
                 setNotification(date: selectedDate)
                 self.presentationMode.wrappedValue.dismiss()
+                // TODO: Make ContentView update the list on this View's dismissal
                 // TODO: setting a date two months gives a date for the next month
             }
         }
