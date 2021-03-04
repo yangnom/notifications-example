@@ -17,7 +17,7 @@ func setNotification(date: Date = Date().addingTimeInterval(10),
     
     let content = notificationContent(title: title, subtitle: subtitle, sound: sound, type: .normal)
 
-    let notificationRequest = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: date)
+    let notificationRequest = Calendar.current.dateComponents([.month, .day, .hour, .minute, .second], from: date)
         .trigger()
         .notificationRequest(content: content)
     
