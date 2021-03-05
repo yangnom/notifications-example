@@ -37,26 +37,16 @@ struct ContentView: View {
                     Section(header: Text("Notification Testing")) {
                         Button("Erase notifications") {
                             removeAllNotifications()
-                            
-                            pendingNotificationRequests() { requests in
-                                self.upcomingNotificationRequests = requests
-                            }
-                            
+                            self.upcomingNotificationRequests = notificationRequests()
                         }
                         
                         Button("Set Random Notifications") {
-                            
                             setRandomNotifications(numberOfNotifications: 5)
-                            
-                            pendingNotificationRequests() { requests in
-                                self.upcomingNotificationRequests = requests
-                            }
+                            self.upcomingNotificationRequests = notificationRequests()
                         }
                         
                         Button("Update Pending Notifications view") {
-                            pendingNotificationRequests() { requests in
-                                self.upcomingNotificationRequests = requests
-                            }
+                            self.upcomingNotificationRequests = notificationRequests()
                         }
                         
                         Button("Set notification without updateView in 10 seconds") {
@@ -75,9 +65,7 @@ struct ContentView: View {
         .onAppear() {
             askForPermission()
             defineCustomActions()
-            pendingNotificationRequests() { requests in
-                self.upcomingNotificationRequests = requests
-            }
+            self.upcomingNotificationRequests = notificationRequests()
         }
         
     }
