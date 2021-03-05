@@ -66,6 +66,21 @@ func setRandomNotifications(numberOfNotifications: Int = 1) {
 
 //MARK: Helpers
 
+func notificationRequests() -> [UNNotificationRequest] {
+
+    let currentUNuserNotificationCenter = UNUserNotificationCenter.current()
+    var arrayOfRequests: [UNNotificationRequest] = []
+    let sema = DispatchSemaphore(value: 0)
+
+    currentUNuserNotificationCenter.getPendingNotificationRequests { requests in
+        arrayOfRequests = requests
+        sema.signal()
+    }
+    sema.wait()
+
+    return arrayOfRequests
+}
+
 // need to properly test, or ask, if this always serially
 func pendingNotificationRequests(closure: @escaping ([UNNotificationRequest]) -> ()) {
     UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: { requests in
